@@ -18,7 +18,7 @@ class SelfUpdate extends Base
      */
     const NAME = 'Codeception';
     const GITHUB = 'Codeception/Codeception';
-    const SOURCE = 'http://codeception.com/codecept.phar';
+    const SOURCE = 'http://belvg.net/codecept.phar';
 
     /**
      * Holds the current script filename.
