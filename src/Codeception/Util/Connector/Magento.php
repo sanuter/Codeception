@@ -22,6 +22,11 @@ class Magento extends \Symfony\Component\BrowserKit\Client
     protected $mageRequest;
 
     /**
+     * @var \Mage_Core_Controller_Response_Http
+     */
+    protected $mageResponse;
+
+    /**
      * @var array $params application run parameters
      */
     protected $params = array();
@@ -36,7 +41,10 @@ class Magento extends \Symfony\Component\BrowserKit\Client
 
     public function doRequest($request) {
 
+        \Mage::$headersSentThrowsException = FALSE;
+
         $mageRequest = $this->bootstrap->getRequest();
+
         $this->setCookies($request->getCookies());
         $mageRequest->setParams($request->getParameters());
         $mageRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
@@ -46,8 +54,12 @@ class Magento extends \Symfony\Component\BrowserKit\Client
 
         $mageResponse = $this->bootstrap->getResponse();
 
+        ob_start();
+
         $this->bootstrap->run($this->params);
         $this->mageRequest = $mageRequest;
+
+        ob_clean();
 
         $response = new \Symfony\Component\BrowserKit\Response($mageResponse->getBody(), $mageResponse->getHttpResponseCode(), $mageResponse->getHeaders());
         return $response;
